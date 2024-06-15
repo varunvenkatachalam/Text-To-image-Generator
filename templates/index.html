@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text to Image Generator</title>
+</head>
+<body>
+    <h1>Text to Image Generator</h1>
+    <form id="text-form">
+        <label for="text">Enter text:</label>
+        <input type="text" id="text" name="text" required>
+        <button type="submit">Generate Image</button>
+    </form>
+    <div id="result"></div>
+
+    <script>
+        document.getElementById('text-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const text = document.getElementById('text').value;
+
+            fetch('/generate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ text })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const resultDiv = document.getElementById('result');
+                if (data.image_url) {
+                    resultDiv.innerHTML = `<img src="${data.image_url}" alt="Generated Image">`;
+                } else {
+                    resultDiv.textContent = 'Failed to generate image';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

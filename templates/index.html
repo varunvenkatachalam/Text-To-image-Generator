@@ -73,6 +73,18 @@
             color: red;
             margin-top: 1rem;
         }
+
+        .download-link {
+            display: block;
+            margin-top: 1rem;
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .download-link:hover {
+            color: #0056b3;
+        }
     </style>
 </head>
 <body>
@@ -103,11 +115,23 @@
             .then(data => {
                 const resultDiv = document.getElementById('result');
                 const errorDiv = document.getElementById('error');
+                resultDiv.innerHTML = '';
+                errorDiv.textContent = '';
+
                 if (data.image_url) {
-                    resultDiv.innerHTML = `<img src="${data.image_url}" alt="Generated Image">`;
-                    errorDiv.textContent = '';
+                    const img = document.createElement('img');
+                    img.src = data.image_url;
+                    img.alt = 'Generated Image';
+
+                    const downloadLink = document.createElement('a');
+                    downloadLink.href = data.image_url;
+                    downloadLink.download = 'generated_image.png';
+                    downloadLink.textContent = 'Download Image';
+                    downloadLink.className = 'download-link';
+
+                    resultDiv.appendChild(img);
+                    resultDiv.appendChild(downloadLink);
                 } else {
-                    resultDiv.innerHTML = '';
                     errorDiv.textContent = data.error || 'Failed to generate image';
                 }
             })
